@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎂 Happy Birthday Ashi! 🎉</title>
+  <meta name="description" content="A magical birthday wish made just for Ashi — with cats, sparkles, balloons, and infinite love." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --pink: #FF6EB4; --pink-light: #FFB3D9; --purple: #A855F7;
+      --yellow: #FFD700; --mint: #6EE7C7; --bg: #1a0530;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at top left, #3b0764 0%, #1a0530 45%, #0d1b4b 100%);
+      font-family: 'Nunito', sans-serif; color: #fff; overflow-x: hidden;
+    }
+    #stars-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    #confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+
+    /* ===== FLOATING CATS ===== */
+    .float-cat {
+      position: fixed;
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0.92;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+      animation: catFloat ease-in-out infinite;
+    }
+    .cat-bubble {
+      position: fixed;
+      pointer-events: none;
+      z-index: 3;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(255,110,180,0.3);
+      border-radius: 1.2rem;
+      padding: 0.4rem 0.7rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--pink-light);
+      white-space: nowrap;
+      animation: catFloat ease-in-out infinite;
+      box-shadow: 0 4px 15px rgba(255,110,180,0.2);
+    }
+    .cat-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -8px; left: 12px;
+      border: 8px solid transparent;
+      border-top-color: rgba(255,110,180,0.3);
+      border-bottom: 0;
+    }
+    @keyframes catFloat {
+      0%,100% { transform: translateY(0) rotate(var(--rot-start, 0deg)); }
+      50%      { transform: translateY(var(--float-y, -14px)) rotate(var(--rot-end, 3deg)); }
+    }
+    @keyframes catWiggle {
+      0%,100% { transform: rotate(-5deg) scale(1); }
+      50%      { transform: rotate(5deg) scale(1.05); }
+    }
+
+    /* ===== INTRO ===== */
+    #intro {
+      position: fixed; inset: 0; z-index: 999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: radial-gradient(ellipse at center, #2d0a5e 0%, #0d1b4b 60%, #1a0530 100%);
+      transition: opacity 1s ease, transform 1s ease; text-align: center; padding: 1rem;
+      overflow: hidden;
+    }
+    #intro.hide { opacity: 0; transform: scale(1.06) translateY(-20px); pointer-events: none; }
+    .intro-floating-hearts { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .intro-heart { position: absolute; bottom: -50px; animation: riseHeart linear infinite; opacity: 0; }
+
+    /* Intro corner cats */
+    .intro-corner-cat {
+      position: absolute;
+      pointer-events: none;
+      animation: catWiggle 2s ease-in-out infinite;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+    }
+
+    .intro-label {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.2rem, 4vw, 2rem); color: var(--pink-light);
+      text-shadow: 0 0 20px rgba(255,110,180,0.8); margin-bottom: 0.4rem;
+    }
+    .intro-name {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2.8rem, 10vw, 5.5rem); color: var(--yellow); display: block;
+      text-shadow: 0 0 30px rgba(255,215,0,1), 0 0 70px rgba(255,215,0,0.5);
+      animation: namePulse 2s ease-in-out infinite; margin-bottom: 1.2rem;
+    }
+    .cake-scene { position: relative; display: inline-block; cursor: pointer; user-select: none; }
+    .cake-emoji {
+      font-size: clamp(5rem, 18vw, 9rem); display: block;
+      filter: drop-shadow(0 0 30px rgba(255,110,180,0.7));
+      animation: floatBounce 2.5s ease-in-out infinite; position: relative; z-index: 2;
+    }
+    .knife {
+      position: absolute; top: -30px; right: -30px;
+      font-size: clamp(2.5rem, 7vw, 4rem); transform: rotate(-15deg);
+      transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+      animation: knifeWobble 2s ease-in-out infinite; z-index: 3;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+    }
+    .cake-scene.cutting .knife, .cake-scene.cut .knife {
+      transform: rotate(10deg) translate(-10px, 20px) scale(1.2) !important; animation: none;
+    }
+    .cake-sparks { position: absolute; inset: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; }
+    .spark { position: absolute; font-size: 1.5rem; opacity: 0; pointer-events: none; }
+    .cake-scene.cut .spark { animation: sparkFly 0.8s ease forwards; }
+    .intro-hint {
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem); color: rgba(255,255,255,0.6);
+      margin-top: 1.2rem; animation: pulse 1.5s ease-in-out infinite;
+    }
+    .intro-hint.cutting-text { color: var(--pink-light); animation: none; font-weight: 800; }
+
+    /* ===== BALLOON CONTAINER ===== */
+    .balloon-container { position: fixed; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+    .balloon { position: absolute; bottom: -120px; animation: floatUp linear infinite; }
+
+    /* ===== MAIN ===== */
+    #main { position: relative; z-index: 5; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 2rem 1rem 4rem; }
+
+    /* ===== HEADER ===== */
+    .header { text-align: center; margin-top: 1.5rem; position: relative; }
+    .header-badge {
+      display: inline-block; background: linear-gradient(135deg, var(--pink), var(--purple));
+      font-size: 0.8rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase;
+      padding: 0.4rem 1.4rem; border-radius: 999px; margin-bottom: 1rem;
+      box-shadow: 0 4px 20px rgba(168,85,247,0.6); animation: glow 2s ease-in-out infinite alternate;
+    }
+    .header h1 {
+      font-family: 'Pacifico', cursive; font-size: clamp(2.2rem, 8vw, 5rem); line-height: 1.1;
+      background: linear-gradient(135deg, #FFD700 0%, #FF6EB4 45%, #A855F7 80%, #6EE7C7 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      animation: shimmer 3s ease-in-out infinite; background-size: 200% 200%;
+    }
+    .header-name {
+      font-family: 'Dancing Script', cursive; font-size: clamp(3rem, 11vw, 6.5rem);
+      color: var(--yellow); display: block;
+      text-shadow: 0 0 25px rgba(255,215,0,0.8), 0 0 60px rgba(255,215,0,0.4);
+      animation: namePulse 2.5s ease-in-out infinite; line-height: 1;
+    }
+    .header-sub { font-size: clamp(0.95rem, 2.5vw, 1.2rem); color: rgba(255,255,255,0.7); margin-top: 0.6rem; font-weight: 600; }
+    .sparkle { position: absolute; pointer-events: none; animation: sparklePop 2.2s ease-in-out infinite; font-size: 1.2rem; }
+
+    /* ===== CAKE ===== */
+    .cake-section { margin-top: 3rem; text-align: center; }
+    .main-cake-img {
+      width: clamp(180px, 38vw, 290px);
+      filter: drop-shadow(0 10px 45px rgba(255,110,180,0.6));
+      animation: floatBounce 3s ease-in-out infinite; cursor: pointer; transition: transform 0.3s;
+    }
+    .main-cake-img:hover { transform: scale(1.06) rotate(2deg); }
+    .candles-blown { opacity: 0.6; filter: grayscale(0.3); }
+    .blow-hint { font-size: 0.9rem; color: rgba(255,255,255,0.55); margin-top: 0.5rem; animation: pulse 2s ease-in-out infinite; }
+    .blow-btn {
+      margin-top: 0.9rem; background: linear-gradient(135deg, #FFD700, #FF6EB4); border: none;
+      border-radius: 999px; padding: 0.85rem 2rem; font-family: 'Nunito', sans-serif;
+      font-size: 1.1rem; font-weight: 900; color: #1a0530; cursor: pointer;
+      box-shadow: 0 6px 25px rgba(255,215,0,0.5); transition: all 0.3s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .blow-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 12px 35px rgba(255,215,0,0.7); }
+    .blow-btn.blown { background: linear-gradient(135deg, var(--mint), var(--purple)); color: #fff; }
+
+    /* ===== CAT PARADE SECTION ===== */
+    .cat-parade {
+      margin-top: 2rem; width: 100%; max-width: 900px;
+      display: flex; align-items: flex-end; justify-content: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .parade-cat {
+      display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+      animation: catWiggle ease-in-out infinite;
+    }
+    .parade-cat img { 
+      filter: drop-shadow(0 4px 12px rgba(255,110,180,0.4));
+      transition: transform 0.3s;
+    }
+    .parade-cat img:hover { transform: scale(1.1) rotate(-5deg); }
+    .cat-label {
+      font-size: 0.72rem; font-weight: 800; color: var(--pink-light);
+      background: rgba(255,110,180,0.15); border: 1px solid rgba(255,110,180,0.3);
+      border-radius: 999px; padding: 0.2rem 0.6rem;
+    }
+
+    /* ===== MESSAGE CARD ===== */
+    .message-card {
+      margin-top: 2.5rem; max-width: 680px; width: 100%;
+      background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,110,180,0.2); border-radius: 2rem;
+      padding: 2.5rem 2rem; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
+      position: relative; overflow: hidden; animation: cardEntrance 0.9s ease 0.3s both;
+    }
+    .message-card::before {
+      content: ''; position: absolute; inset: 0; border-radius: 2rem;
+      background: linear-gradient(135deg, rgba(255,110,180,0.07), rgba(168,85,247,0.07));
+      pointer-events: none;
+    }
+    /* Tiny cat peek in corner of card */
+    .card-cat-peek {
+      position: absolute; bottom: -5px; right: 10px;
+      font-size: 2.5rem; animation: catWiggle 3s ease-in-out infinite;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+    }
+    .msg-icon { font-size: 3rem; display: block; margin-bottom: 0.8rem; }
+    .msg-title {
+      font-family: 'Dancing Script', cursive; font-size: clamp(1.8rem, 5vw, 2.6rem);
+      color: var(--yellow); margin-bottom: 1.2rem; text-shadow: 0 0 20px rgba(255,215,0,0.6);
+    }
+    .msg-para {
+      font-size: clamp(1rem, 2vw, 1.12rem); line-height: 1.9;
+      color: rgba(255,255,255,0.9); margin-bottom: 1.1rem; text-align: center;
+    }
+    .msg-para em { color: var(--pink-light); font-style: normal; font-weight: 800; }
+    .msg-para strong { color: var(--yellow); font-weight: 900; }
+    .card-divider { height: 2px; background: linear-gradient(90deg, transparent, var(--pink), var(--purple), transparent); border: none; margin: 1.4rem 0; border-radius: 999px; }
+    .msg-sign { font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: var(--mint); text-shadow: 0 0 10px rgba(110,231,199,0.4); }
+
+    /* ===== BUBBU DUDDU SECTION ===== */
+    .bubbu-section {
+      margin-top: 3rem; max-width: 680px; width: 100%;
+      background: rgba(255,110,180,0.06); backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,110,180,0.25); border-radius: 2rem;
+      padding: 2rem 1.5rem; text-align: center;
+      position: relative; overflow: visible;
+    }
+    .bubbu-title { font-family: 'Pacifico', cursive; font-size: clamp(1.3rem, 4vw, 1.8rem); color: var(--pink-light); margin-bottom: 0.5rem; }
+    .bubbu-sub { font-size: 0.9rem; color: rgba(255,255,255,0.6); margin-bottom: 1.2rem; font-style: italic; }
+    .bubbu-img {
+      width: clamp(160px, 35vw, 240px);
+      filter: drop-shadow(0 8px 30px rgba(255,110,180,0.6));
+      animation: floatBounce 3.5s ease-in-out infinite;
+    }
+    .bubbu-msg {
+      margin-top: 1rem; font-size: clamp(0.95rem, 2vw, 1.05rem);
+      color: rgba(255,255,255,0.85); line-height: 1.8; font-weight: 700;
+    }
+    .bubbu-msg span { color: var(--pink-light); }
+
+    /* ===== WISHES GRID ===== */
+    .wishes-section { margin-top: 3rem; max-width: 900px; width: 100%; text-align: center; }
+    .section-title {
+      font-family: 'Pacifico', cursive; font-size: clamp(1.4rem, 4vw, 2.1rem);
+      background: linear-gradient(135deg, var(--yellow), var(--pink));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 1.4rem;
+    }
+    .wishes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+    .wish-card {
+      background: rgba(255,255,255,0.05); backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 1.8rem;
+      padding: 1.6rem 1.1rem; text-align: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative; overflow: hidden;
+    }
+    .wish-card::before { content: ''; position: absolute; inset: 0; border-radius: 1.8rem; opacity: 0; transition: opacity 0.4s; }
+    .wish-card:nth-child(1)::before { background: linear-gradient(135deg, rgba(255,110,180,0.17), rgba(168,85,247,0.17)); }
+    .wish-card:nth-child(2)::before { background: linear-gradient(135deg, rgba(255,215,0,0.17), rgba(255,110,180,0.17)); }
+    .wish-card:nth-child(3)::before { background: linear-gradient(135deg, rgba(110,231,199,0.17), rgba(168,85,247,0.17)); }
+    .wish-card:nth-child(4)::before { background: linear-gradient(135deg, rgba(255,127,127,0.17), rgba(255,215,0,0.17)); }
+    .wish-card:hover::before { opacity: 1; }
+    .wish-card:hover { transform: translateY(-9px) scale(1.04); border-color: rgba(255,110,180,0.45); box-shadow: 0 22px 55px rgba(0,0,0,0.35); }
+    .wish-emoji { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
+    .wish-title { font-weight: 900; font-size: 1.05rem; color: var(--pink-light); margin-bottom: 0.4rem; }
+    .wish-text { font-size: 0.88rem; color: rgba(255,255,255,0.68); line-height: 1.6; }
+
+    /* ===== MEME CATS BANNER ===== */
+    .meme-cats-section { margin-top: 3rem; text-align: center; width: 100%; max-width: 900px; }
+    .meme-cats-label { font-family: 'Pacifico', cursive; font-size: clamp(1.3rem, 4vw, 1.9rem); color: var(--yellow); margin-bottom: 1rem; }
+    .meme-cats-img {
+      width: min(100%, 700px);
+      filter: drop-shadow(0 6px 25px rgba(168,85,247,0.5));
+      animation: floatBounce 4s ease-in-out 0.5s infinite;
+    }
+
+    /* ===== BALLOON IMAGE ===== */
+    .photo-section { margin-top: 2.5rem; text-align: center; }
+    .balloons-img { width: clamp(200px, 48vw, 360px); filter: drop-shadow(0 10px 45px rgba(168,85,247,0.55)); animation: floatBounce 4s ease-in-out 1s infinite; }
+
+    /* ===== FUN BOXES ===== */
+    .fun-section { margin-top: 3rem; max-width: 680px; width: 100%; background: rgba(255,215,0,0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,215,0,0.25); border-radius: 2rem; padding: 2rem 1.5rem; text-align: center; }
+    .fun-title { font-family: 'Pacifico', cursive; font-size: 1.5rem; color: var(--yellow); margin-bottom: 1.1rem; }
+    .fun-counter { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .fun-box { background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3); border-radius: 1.2rem; padding: 1rem 1.4rem; min-width: 90px; }
+    .fun-num { font-family: 'Pacifico', cursive; font-size: 2.2rem; color: var(--yellow); display: block; text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+    .fun-label { font-size: 0.72rem; color: rgba(255,255,255,0.58); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+    /* ===== FOOTER ===== */
+    .footer { margin-top: 4rem; text-align: center; padding-bottom: 2rem; }
+    .footer-cats { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
+    .footer-hearts { font-size: 2rem; display: block; animation: heartBeat 1.2s ease-in-out infinite; }
+    .footer-name { font-family: 'Pacifico', cursive; font-size: 1.2rem; color: var(--pink-light); margin-top: 0.5rem; text-shadow: 0 0 10px rgba(255,110,180,0.5); }
+    .footer-text { font-size: 0.85rem; color: rgba(255,255,255,0.3); margin-top: 0.3rem; }
+
+    /* ===== BUTTONS ===== */
+    .firework-btn {
+      margin-top: 1.5rem; background: linear-gradient(135deg, var(--purple), var(--pink));
+      border: none; border-radius: 999px; padding: 0.95rem 2.3rem;
+      font-family: 'Nunito', sans-serif; font-size: 1.1rem; font-weight: 900; color: #fff;
+      cursor: pointer; box-shadow: 0 6px 25px rgba(168,85,247,0.5); transition: all 0.3s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .firework-btn:hover { transform: translateY(-3px) scale(1.06); box-shadow: 0 14px 40px rgba(168,85,247,0.7); }
+    .firework-btn:active { transform: scale(0.97); }
+    .music-btn {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 50;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink), var(--purple)); border: none;
+      font-size: 1.5rem; cursor: pointer; box-shadow: 0 6px 25px rgba(168,85,247,0.6);
+      display: flex; align-items: center; justify-content: center; transition: all 0.3s;
+    }
+    .music-btn:hover { transform: scale(1.12) rotate(10deg); }
+    .music-btn.playing { animation: musicSpin 3s linear infinite; }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed; bottom: 5rem; left: 50%; transform: translateX(-50%) translateY(100px);
+      background: rgba(30,10,60,0.95); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,110,180,0.4); border-radius: 999px;
+      padding: 0.85rem 1.8rem; font-weight: 800; font-size: 0.95rem; color: #fff;
+      z-index: 100; transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+      white-space: nowrap; pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ===== ALL ANIMATIONS ===== */
+    @keyframes floatBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+    @keyframes floatUp { 0%{transform:translateY(0) rotate(-5deg);opacity:0} 5%{opacity:1} 95%{opacity:1} 100%{transform:translateY(-110vh) rotate(5deg);opacity:0} }
+    @keyframes riseHeart { 0%{opacity:0.9;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-100vh) scale(0.4) rotate(20deg)} }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    @keyframes glow { 0%{box-shadow:0 4px 20px rgba(168,85,247,0.4)} 100%{box-shadow:0 4px 30px rgba(255,110,180,0.8),0 0 60px rgba(255,110,180,0.3)} }
+    @keyframes shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+    @keyframes namePulse { 0%,100%{text-shadow:0 0 25px rgba(255,215,0,0.8),0 0 50px rgba(255,215,0,0.4)} 50%{text-shadow:0 0 50px rgba(255,215,0,1),0 0 100px rgba(255,215,0,0.6)} }
+    @keyframes sparklePop { 0%,100%{opacity:0;transform:scale(0.4) rotate(0deg)} 50%{opacity:1;transform:scale(1.3) rotate(180deg)} }
+    @keyframes cardEntrance { from{opacity:0;transform:translateY(40px) scale(0.96)} to{opacity:1;transform:translateY(0) scale(1)} }
+    @keyframes heartBeat { 0%,100%{transform:scale(1)} 14%{transform:scale(1.3)} 28%{transform:scale(1)} 42%{transform:scale(1.3)} 70%{transform:scale(1)} }
+    @keyframes musicSpin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    @keyframes knifeWobble { 0%,100%{transform:rotate(-15deg)} 50%{transform:rotate(-8deg) translate(3px,-5px)} }
+    @keyframes cakeShake { 0%,100%{transform:scale(1)} 25%{transform:scale(0.95) rotate(-3deg)} 75%{transform:scale(0.95) rotate(3deg)} }
+    @keyframes cakeSplit { 0%{transform:scale(1)} 30%{transform:scale(1.1);filter:brightness(1.5) drop-shadow(0 0 30px #FFD700)} 60%{transform:scale(0.9) translateY(10px);opacity:0.8} 100%{transform:scale(0) translateY(30px);opacity:0} }
+    @keyframes sparkFly { 0%{opacity:1;transform:translate(0,0) scale(1)} 100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0.3)} }
+    @keyframes catWiggle { 0%,100%{transform:rotate(-5deg) scale(1)} 50%{transform:rotate(5deg) scale(1.05)} }
+    @keyframes catBounceIn { 0%{opacity:0;transform:scale(0) rotate(-15deg)} 70%{transform:scale(1.1) rotate(5deg)} 100%{opacity:1;transform:scale(1) rotate(0deg)} }
+  </style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+<canvas id="confetti-canvas"></canvas>
+
+<!-- ===== FLOATING CATS (fixed on screen) ===== -->
+<img class="float-cat" src="cat_pleading.png" alt="pleading cat"
+     style="width:90px;bottom:15%;left:1%;--rot-start:-5deg;--rot-end:5deg;--float-y:-12px;animation-duration:3.2s;" />
+<img class="float-cat" src="cat_party.png" alt="party cat"
+     style="width:85px;top:20%;right:0.5%;--rot-start:5deg;--rot-end:-5deg;--float-y:-10px;animation-duration:4s;animation-delay:0.5s;" />
+<img class="float-cat" src="cat_pleading.png" alt="pleading cat 2"
+     style="width:70px;top:55%;right:1%;--rot-start:-8deg;--rot-end:4deg;--float-y:-14px;animation-duration:3.5s;animation-delay:1s;opacity:0.75;" />
+<img class="float-cat" src="cat_party.png" alt="party cat 2"
+     style="width:75px;top:40%;left:0.5%;--rot-start:3deg;--rot-end:-6deg;--float-y:-10px;animation-duration:4.5s;animation-delay:1.5s;opacity:0.8;" />
+
+<!-- Cat speech bubbles -->
+<div class="cat-bubble" style="bottom:calc(15% + 95px);left:calc(1% + 95px);animation-duration:3.2s;--float-y:-8px;">Happy Bday Ashi! 🐾</div>
+<div class="cat-bubble" style="top:calc(20% + 90px);right:calc(0.5% + 90px);animation-duration:4s;--float-y:-8px;animation-delay:0.5s;">We love u! 😺💕</div>
+
+<!-- ===== INTRO ===== -->
+<div id="intro">
+  <div class="intro-floating-hearts" id="introHearts"></div>
+
+  <!-- Corner cats on intro -->
+  <img class="intro-corner-cat" src="cat_pleading.png" alt="cat"
+       style="width:clamp(60px,12vw,110px);bottom:5%;left:2%;animation-duration:2.5s;" />
+  <img class="intro-corner-cat" src="cat_party.png" alt="cat"
+       style="width:clamp(60px,12vw,110px);bottom:5%;right:2%;animation-duration:3s;animation-delay:0.4s;" />
+  <img class="intro-corner-cat" src="cat_pleading.png" alt="cat"
+       style="width:clamp(40px,8vw,70px);top:5%;left:3%;animation-duration:3.5s;animation-delay:0.8s;opacity:0.8;" />
+  <img class="intro-corner-cat" src="cat_party.png" alt="cat"
+       style="width:clamp(40px,8vw,70px);top:5%;right:3%;animation-duration:2.8s;animation-delay:0.3s;opacity:0.8;" />
+
+  <p class="intro-label">A special surprise for</p>
+  <span class="intro-name">Ashi 💖</span>
+
+  <div class="cake-scene" id="cakeScene">
+    <div class="cake-sparks" id="cakeSparks"></div>
+    <span class="knife">🔪</span>
+    <span class="cake-emoji" id="introCake">🎂</span>
+  </div>
+  <p class="intro-hint" id="introHint">🎀 Tap the cake to cut it open! 🎀</p>
+</div>
+
+<!-- ===== BALLOONS ===== -->
+<div class="balloon-container" id="balloonContainer"></div>
+<div class="toast" id="toast">🎉 Yay!</div>
+<button class="music-btn" id="musicBtn" aria-label="Toggle music">🎵</button>
+
+<!-- ===== MAIN ===== -->
+<main id="main">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-badge">🐱 Made especially for Ashi 🌸</div>
+    <h1>
+      Happy Birthday<br>
+      <span class="header-name">Ashi! 🌟</span>
+    </h1>
+    <p class="header-sub">✨ The world got a whole lot cuter the day you were born ✨</p>
+    <span class="sparkle" style="top:-5px;left:7%;">✦</span>
+    <span class="sparkle" style="top:25px;right:5%;animation-delay:0.6s;color:var(--pink);">✦</span>
+    <span class="sparkle" style="bottom:0;left:2%;animation-delay:1.1s;color:var(--mint);">✦</span>
+    <span class="sparkle" style="bottom:5px;right:9%;animation-delay:1.6s;">✦</span>
+  </header>
+
+  <!-- CAT PARADE -->
+  <div class="cat-parade">
+    <div class="parade-cat" style="animation-duration:2.8s;">
+      <img src="cat_pleading.png" alt="pleading cat" style="width:clamp(70px,15vw,120px);" />
+      <span class="cat-label">😿 "Hug me plz"</span>
+    </div>
+    <div class="parade-cat" style="animation-duration:3.3s;animation-delay:0.3s;">
+      <img src="bubbu_duddu.png" alt="bubbu duddu" style="width:clamp(80px,16vw,130px);" />
+      <span class="cat-label">🩷 Bubbu Duddu</span>
+    </div>
+    <div class="parade-cat" style="animation-duration:2.5s;animation-delay:0.6s;">
+      <img src="cat_party.png" alt="party cat" style="width:clamp(70px,15vw,120px);" />
+      <span class="cat-label">🎉 Party cat!</span>
+    </div>
+  </div>
+
+  <!-- CAKE -->
+  <section class="cake-section">
+    <div>
+      <img src="birthday_cake.png" alt="Birthday cake for Ashi" class="main-cake-img" id="mainCakeImg" />
+    </div>
+    <p class="blow-hint" id="blowHint">🎂 Click the cake to make a wish, Ashi! 🌸</p>
+    <button class="blow-btn" id="blowBtn">🌬️ Blow out the candles!</button>
+  </section>
+
+  <!-- MESSAGE CARD -->
+  <section class="message-card">
+    <div class="card-cat-peek">😺</div>
+    <span class="msg-icon">💌</span>
+    <p class="msg-title">Hey Ashi! 🌸</p>
+
+    <p class="msg-para">
+      You are honestly one of the most ✨ <em>sunshine-y</em> ✨ people to ever exist 💛 and the world is just so much warmer, cuter and better because you're in it! 🌸🌍
+    </p>
+
+    <p class="msg-para">
+      You deserve all the 🎂 cake, all the 🎁 gifts, all the 🌟 love — today and every single day! You give so much to the people around you 💕 and today it all comes back to you! 🫶
+    </p>
+
+    <p class="msg-para">
+      So on your special day — <strong>smile wide</strong> 😄, laugh loud 🎶, eat that extra piece of cake 🍰, and know that someone out there is wishing you nothing but the most <em>magical, beautiful, joy-filled life</em> ever! 🌈✨🥳
+    </p>
+
+    <hr class="card-divider" />
+    <p class="msg-sign">Happy Birthday, beautiful Ashi! 💖🎉</p>
+  </section>
+
+  <!-- BUBBU DUDDU SPECIAL SECTION -->
+  <section class="bubbu-section">
+    <p class="bubbu-title">🩷 Bubbu Duddu says... 🩷</p>
+    <p class="bubbu-sub">( this lil one has a very important message for you! )</p>
+    <img src="bubbu_duddu.png" alt="Bubbu Duddu character" class="bubbu-img" />
+    <p class="bubbu-msg">
+      "You are my <span>favourite person</span> in the whole wide world!! 🌍💖<br>
+      I brought you a tiny cake 🎂 and a heart full of love 💝<br>
+      because you deserve <span>ALL the cute things</span> in this universe! 🌟🐣"
+    </p>
+  </section>
+
+  <!-- WISHES GRID -->
+  <section class="wishes-section">
+    <h2 class="section-title">Sending you all of this today 💫</h2>
+    <div class="wishes-grid">
+      <div class="wish-card">
+        <span class="wish-emoji">🌈</span>
+        <p class="wish-title">Endless Joy</p>
+        <p class="wish-text">May every day feel as bright and colorful as a rainbow after rain! 🌦️✨</p>
+      </div>
+      <div class="wish-card">
+        <span class="wish-emoji">💖</span>
+        <p class="wish-title">All the Love</p>
+        <p class="wish-text">May you always feel seen, chosen and loved beyond what words can say! 🥰💕</p>
+      </div>
+      <div class="wish-card">
+        <span class="wish-emoji">🌟</span>
+        <p class="wish-title">Big Dreams</p>
+        <p class="wish-text">May every dream you dare to dream find its wings and fly! 🦋🚀</p>
+      </div>
+      <div class="wish-card">
+        <span class="wish-emoji">🎂</span>
+        <p class="wish-title">Magic Moments</p>
+        <p class="wish-text">May this year give you so many beautiful moments you lose count! 🎊🌺</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEME CATS BANNER -->
+  <section class="meme-cats-section">
+    <p class="meme-cats-label">🐱 The whole cat gang is here for you! 🐱</p>
+    <img src="meme_cats.png" alt="Cute meme cats for Ashi" class="meme-cats-img" />
+  </section>
+
+  <!-- BALLOON IMAGE -->
+  <section class="photo-section">
+    <img src="birthday_balloons.png" alt="Cute birthday balloons for Ashi" class="balloons-img" />
+  </section>
+
+  <!-- FUN BOXES -->
+  <section class="fun-section">
+    <p class="fun-title">🎁 Ashi's Birthday Numbers 🐾</p>
+    <div class="fun-counter" id="funCounter"></div>
+  </section>
+
+  <!-- CELEBRATE BTN -->
+  <div style="text-align:center;margin-top:2.5rem;">
+    <button class="firework-btn" id="fireworkBtn">🎆 Celebrate Ashi! 🐱🎉</button>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer-cats">😺🌸😸💖😹</span>
+    <span class="footer-hearts">💖✨🎂✨💖</span>
+    <p class="footer-name">Happy Birthday, Ashi! 🌸</p>
+    <p class="footer-text">Made with infinite love (and cats) just for you 💕🐾</p>
+  </footer>
+
+</main>
+
+<script>
+/* ===== STARS ===== */
+(function(){
+  const cv=document.getElementById('stars-canvas'),cx=cv.getContext('2d');let st=[];
+  function rs(){cv.width=innerWidth;cv.height=innerHeight;}
+  function is(){st=Array.from({length:200},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.7+0.3,a:Math.random(),sp:Math.random()*0.008+0.003,ph:Math.random()*Math.PI*2}));}
+  function dr(t){cx.clearRect(0,0,cv.width,cv.height);st.forEach(s=>{s.a=0.3+0.7*Math.abs(Math.sin(t*s.sp+s.ph));cx.beginPath();cx.arc(s.x,s.y,s.r,0,Math.PI*2);cx.fillStyle=`rgba(255,255,255,${s.a})`;cx.fill();});requestAnimationFrame(dr);}
+  window.addEventListener('resize',()=>{rs();is();});rs();is();dr(0);
+})();
+
+/* ===== CONFETTI ===== */
+const cCv=document.getElementById('confetti-canvas'),cCx=cCv.getContext('2d');
+let pcs=[],run=false;
+function rcv(){cCv.width=innerWidth;cCv.height=innerHeight;}
+window.addEventListener('resize',rcv);rcv();
+const COLS=['#FF6EB4','#FFD700','#A855F7','#6EE7C7','#FF7F7F','#FFB3D9','#D8B4FE','#FFF','#FB7185','#FCD34D'];
+const SHP=['circle','rect','triangle','star','heart','paw'];
+function burst(n,ox,oy){
+  for(let i=0;i<n;i++){pcs.push({x:(ox+(Math.random()-0.5)*0.25)*cCv.width,y:oy*cCv.height,vx:(Math.random()-0.5)*14,vy:Math.random()*-18-5,rot:Math.random()*360,rv:(Math.random()-0.5)*12,sz:Math.random()*12+5,color:COLS[Math.floor(Math.random()*COLS.length)],shape:SHP[Math.floor(Math.random()*SHP.length)],life:1,decay:Math.random()*0.007+0.003,grav:Math.random()*0.4+0.2});}
+  if(!run){run=true;animC();}
+}
+function dp(c,p){
+  c.save();c.translate(p.x,p.y);c.rotate(p.rot*Math.PI/180);c.globalAlpha=p.life;c.fillStyle=p.color;
+  if(p.shape==='circle'){c.beginPath();c.arc(0,0,p.sz/2,0,Math.PI*2);c.fill();}
+  else if(p.shape==='rect'){c.fillRect(-p.sz/2,-p.sz/4,p.sz,p.sz/2);}
+  else if(p.shape==='triangle'){c.beginPath();c.moveTo(0,-p.sz/2);c.lineTo(p.sz/2,p.sz/2);c.lineTo(-p.sz/2,p.sz/2);c.closePath();c.fill();}
+  else if(p.shape==='heart'){const s=p.sz/2;c.beginPath();c.moveTo(0,-s*0.5);c.bezierCurveTo(s*0.8,-s*1.2,s*1.5,-s*0.2,0,s*0.9);c.bezierCurveTo(-s*1.5,-s*0.2,-s*0.8,-s*1.2,0,-s*0.5);c.fill();}
+  else if(p.shape==='paw'){
+    // Simple paw: circle body + 4 tiny circles
+    c.beginPath();c.arc(0,0,p.sz*0.35,0,Math.PI*2);c.fill();
+    const pp=[[-.3,-.45],[.3,-.45],[-.5,-.2],[.5,-.2]];
+    pp.forEach(([dx,dy])=>{c.beginPath();c.arc(dx*p.sz,dy*p.sz,p.sz*0.18,0,Math.PI*2);c.fill();});
+  }
+  else{for(let i=0;i<5;i++){const a=(i*4*Math.PI)/5-Math.PI/2;i===0?c.moveTo(Math.cos(a)*p.sz/2,Math.sin(a)*p.sz/2):c.lineTo(Math.cos(a)*p.sz/2,Math.sin(a)*p.sz/2);}c.closePath();c.fill();}
+  c.restore();
+}
+function animC(){
+  cCx.clearRect(0,0,cCv.width,cCv.height);pcs=pcs.filter(p=>p.life>0);
+  pcs.forEach(p=>{p.vy+=p.grav;p.x+=p.vx;p.y+=p.vy;p.vx*=0.99;p.rot+=p.rv;p.life-=p.decay;dp(cCx,p);});
+  if(pcs.length>0)requestAnimationFrame(animC);else{run=false;cCx.clearRect(0,0,cCv.width,cCv.height);}
+}
+
+/* ===== BALLOON SPAWNER ===== */
+const BE=['🎈','🎈','🎀','🎊','🎁','⭐','🌟','💖','🌸','💕','✨','🌺','🐱','😺','😸','🐾'];
+const bCont=document.getElementById('balloonContainer');
+function spawnB(){
+  const el=document.createElement('div');el.className='balloon';
+  el.textContent=BE[Math.floor(Math.random()*BE.length)];
+  el.style.left=Math.random()*100+'vw';el.style.fontSize=(1.5+Math.random()*2.5)+'rem';
+  const dur=8+Math.random()*14;el.style.animationDuration=dur+'s';el.style.animationDelay=Math.random()*5+'s';
+  bCont.appendChild(el);setTimeout(()=>el.remove(),(dur+6)*1000);
+}
+setInterval(spawnB,900);for(let i=0;i<8;i++)setTimeout(spawnB,i*220);
+
+/* ===== INTRO HEARTS ===== */
+(function(){
+  const c=document.getElementById('introHearts');
+  const HE=['💖','💕','✨','🌸','💫','⭐','💝','🌺','🎀','😺','🐾','😸'];
+  for(let i=0;i<22;i++){
+    const h=document.createElement('span');h.className='intro-heart';
+    h.textContent=HE[Math.floor(Math.random()*HE.length)];
+    h.style.left=Math.random()*100+'vw';
+    h.style.animationDuration=(4+Math.random()*6)+'s';
+    h.style.animationDelay=(Math.random()*5)+'s';
+    h.style.fontSize=(0.9+Math.random()*1.6)+'rem';
+    c.appendChild(h);
+  }
+})();
+
+/* ===== CAKE CUTTING INTRO ===== */
+const cakeScene=document.getElementById('cakeScene'),introCake=document.getElementById('introCake');
+const cakeSparks=document.getElementById('cakeSparks'),introHint=document.getElementById('introHint');
+const intro=document.getElementById('intro');
+let cakeClickCount=0,cakeCut=false;
+
+function spawnSparks(){
+  cakeSparks.innerHTML='';
+  const em=['✨','🌟','💖','🎊','🎉','⭐','💫','🌸','🎈','🐾','😺','🐱'];
+  for(let i=0;i<12;i++){
+    const s=document.createElement('span');s.className='spark';
+    s.textContent=em[i%em.length];
+    const angle=(i/12)*360,dist=90+Math.random()*60;
+    s.style.setProperty('--tx',Math.cos(angle*Math.PI/180)*dist+'px');
+    s.style.setProperty('--ty',Math.sin(angle*Math.PI/180)*dist+'px');
+    s.style.animationDelay=(i*0.05)+'s';
+    cakeSparks.appendChild(s);
+  }
+}
+
+function openIntro(){
+  intro.classList.add('hide');setTimeout(()=>intro.style.display='none',1000);
+  burst(280,0.5,0);
+  setTimeout(()=>burst(130,0.1,0.3),300);setTimeout(()=>burst(130,0.9,0.3),550);setTimeout(()=>burst(100,0.5,0.6),800);
+  showToast('🎉 Happy Birthday, Ashi!! 🐱💖');
+}
+
+cakeScene.addEventListener('click',()=>{
+  if(cakeCut)return;
+  cakeClickCount++;
+  if(cakeClickCount===1){
+    cakeScene.classList.add('cutting');
+    introHint.textContent='✂️ Cut it open! Tap again!';
+    introHint.classList.add('cutting-text');
+    const r=cakeScene.getBoundingClientRect();
+    burst(30,(r.left+r.width/2)/innerWidth,(r.top+r.height/2)/innerHeight);
+  } else if(cakeClickCount===2){
+    cakeCut=true;cakeScene.classList.remove('cutting');cakeScene.classList.add('cut');
+    spawnSparks();introHint.textContent='🎂 YAY!! Happy Birthday Ashi!! 🐱🎉';
+    const r=cakeScene.getBoundingClientRect();
+    const cx=(r.left+r.width/2)/innerWidth,cy=(r.top+r.height/2)/innerHeight;
+    for(let i=0;i<6;i++)setTimeout(()=>burst(60,cx+(Math.random()-0.5)*0.3,cy+(Math.random()-0.5)*0.2),i*100);
+    setTimeout(openIntro,1200);
+  }
+});
+
+/* ===== CAKE MAIN ===== */
+const mainCakeImg=document.getElementById('mainCakeImg'),blowBtn=document.getElementById('blowBtn'),blowHint=document.getElementById('blowHint');
+let blown=false;
+function blowCandles(){
+  if(blown){burst(180,0.5,0.5);showToast('🐱 Celebrate again, Ashi! 🌟');return;}
+  blown=true;mainCakeImg.classList.add('candles-blown');
+  blowBtn.textContent='🎊 Wish sent to the stars! ✨';blowBtn.classList.add('blown');
+  blowHint.textContent='🌟 May your wish come true, Ashi! 💫';
+  burst(230,0.5,0.4);showToast('😺 Ashi made a wish! It WILL come true! 💖');
+  for(let i=0;i<8;i++)setTimeout(()=>burst(35,Math.random(),Math.random()*0.5),i*130);
+}
+mainCakeImg.addEventListener('click',blowCandles);blowBtn.addEventListener('click',blowCandles);
+
+/* ===== FUN COUNTER ===== */
+(function(){
+  const c=document.getElementById('funCounter');
+  const data=[{num:'🎂',label:"Ashi's big day!"},{num:'365',label:'Days of magic'},{num:'∞',label:'Love for Ashi'},{num:'🐾',label:'Cat hugs sent'}];
+  data.forEach(d=>{const b=document.createElement('div');b.className='fun-box';b.innerHTML=`<span class="fun-num">${d.num}</span><span class="fun-label">${d.label}</span>`;c.appendChild(b);});
+})();
+
+/* ===== FIREWORK BTN ===== */
+document.getElementById('fireworkBtn').addEventListener('click',()=>{
+  for(let i=0;i<8;i++)setTimeout(()=>burst(100,Math.random(),Math.random()*0.5),i*170);
+  showToast('🎆 Happy Birthday, Ashi!! 🐱💖🎉');
+});
+
+/* ===== TOAST ===== */
+const toastEl=document.getElementById('toast');let toastTimer=null;
+function showToast(msg){toastEl.textContent=msg;toastEl.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.classList.remove('show'),3000);}
+
+/* ===== MUSIC ===== */
+const musicBtn=document.getElementById('musicBtn');
+let audioCtx=null,musicPlaying=false,musicInterval=null;
+const NOTE={C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99};
+const melody=[[NOTE.C4,0.4],[NOTE.C4,0.2],[NOTE.D4,0.6],[NOTE.C4,0.6],[NOTE.F4,0.6],[NOTE.E4,1.0],[NOTE.C4,0.4],[NOTE.C4,0.2],[NOTE.D4,0.6],[NOTE.C4,0.6],[NOTE.G4,0.6],[NOTE.F4,1.0],[NOTE.C4,0.4],[NOTE.C4,0.2],[NOTE.C5,0.6],[NOTE.A4,0.6],[NOTE.F4,0.6],[NOTE.E4,0.6],[NOTE.D4,1.0],[NOTE.B4,0.4],[NOTE.B4,0.2],[NOTE.A4,0.6],[NOTE.F4,0.6],[NOTE.G4,0.6],[NOTE.F4,1.4]];
+function playNote(ctx,f,s,d){const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(0.2,s+0.03);g.gain.linearRampToValueAtTime(0,s+d-0.05);o.start(s);o.stop(s+d);}
+function playMelody(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();let t=audioCtx.currentTime+0.1;melody.forEach(([f,d])=>{playNote(audioCtx,f,t,d*0.85);t+=d;});return t-audioCtx.currentTime;}
+musicBtn.addEventListener('click',function(){
+  if(!musicPlaying){musicPlaying=true;musicBtn.textContent='🎶';musicBtn.classList.add('playing');const dur=playMelody()*1000;musicInterval=setInterval(playMelody,dur+500);showToast('🎵 Happy Birthday melody for Ashi! 😸');}
+  else{musicPlaying=false;musicBtn.textContent='🎵';musicBtn.classList.remove('playing');clearInterval(musicInterval);if(audioCtx){audioCtx.close();audioCtx=null;}showToast('🔇 Music paused');}
+});
+
+/* ===== MOUSE SPARKLE ===== */
+document.addEventListener('mousemove',function(e){
+  if(Math.random()>0.84){
+    const el=document.createElement('div');
+    el.style.cssText='position:fixed;left:'+e.clientX+'px;top:'+e.clientY+'px;pointer-events:none;z-index:200;font-size:'+(10+Math.random()*14)+'px;transform:translate(-50%,-50%);transition:all 0.6s ease;opacity:1;';
+    el.textContent=['✦','✧','✨','⭐','💫','🌸','💖','💕','🐾','😺'][Math.floor(Math.random()*10)];
+    document.body.appendChild(el);
+    setTimeout(()=>{el.style.opacity='0';el.style.transform='translate('+(Math.random()*40-20)+'px,'+(-(70+Math.random()*60))+'px) scale(0.3)';},50);
+    setTimeout(()=>el.remove(),700);
+  }
+});
+
+/* ===== TOUCH ===== */
+document.addEventListener('touchstart',function(e){
+  const t=e.touches[0];burst(20,t.clientX/innerWidth,t.clientY/innerHeight);
+},{passive:true});
+
+/* ===== RANDOM CAT POP UPS ===== */
+const catMsgs=['😺 Meow Ashi! Happy Birthday! 🎂','😸 You are purrfect! 💖','🐱 We love you so much! 🌟','😻 Heart eyes for Ashi! 💕','🐾 Paw-some birthday! 🎉','😹 LOL you are the best! ✨'];
+let catMsgIdx=0;
+setInterval(()=>{
+  showToast(catMsgs[catMsgIdx%catMsgs.length]);
+  catMsgIdx++;
+},12000);
+</script>
+</body>
+</html>
